@@ -96,12 +96,13 @@ class GameManager extends GetxController {
       for (int i = 0; i < numberOfRows.value; i++) {
         diagonalList.add([j, i]);
       }
-      if (checkSubset(pData, diagonalList)) {
+      if (checkSubset(diagonalList, pData)) {
         return true;
       }
     }
     return false;
   }
+
   bool checkForCol(List<List<int>> pData) {
     for (int j = 0; j < numberOfRows.value; j++) {
       List<List<int>> diagonalList = [];
@@ -110,7 +111,7 @@ class GameManager extends GetxController {
       for (int i = 0; i < numberOfRows.value; i++) {
         diagonalList.add([i, j]);
       }
-      if (checkSubset(pData, diagonalList)) {
+      if (checkSubset(diagonalList, pData)) {
         return true;
       }
     }
@@ -118,21 +119,17 @@ class GameManager extends GetxController {
   }
 
   bool checkSubset(List<List<int>> playerList, List<List<int>> possibleList) {
-    DeepCollectionEquality equality = DeepCollectionEquality();
-    List<List<int>> sortedPlayerList = List.from(playerList)
-      ..sort((a, b) => compareLists(a, b));
-    List<List<int>> sortedPossibleList = List.from(possibleList)
-      ..sort((a, b) => compareLists(a, b));
-    return equality.equals(sortedPlayerList, sortedPossibleList);
+    return playerList.every((element) => possibleList
+        .any((possibleElement) => listEquals(possibleElement, element)));
   }
 
-  int compareLists(List<int> a, List<int> b) {
-    for (int i = 0; i < a.length && i < b.length; i++) {
-      if (a[i] != b[i]) {
-        return a[i].compareTo(b[i]);
-      }
+  bool listEquals(List<int> a, List<int> b) {
+    // Check if two lists are exactly equal
+    if (a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
     }
-    return a.length.compareTo(b.length);
+    return true;
   }
 }
 
