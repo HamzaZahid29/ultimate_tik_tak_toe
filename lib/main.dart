@@ -84,7 +84,8 @@ class GameManager extends GetxController {
         checkSubset(diagonalListAlt, _p1data) ||
         checkSubset(diagonalListAlt, _p2data) ||
         checkForRow(_p1data) ||
-        checkForRow(_p2data));
+        checkForRow(_p2data)||checkForCol(_p1data) ||
+        checkForCol(_p2data));
   }
 
   bool checkForRow(List<List<int>> pData) {
@@ -95,7 +96,21 @@ class GameManager extends GetxController {
       for (int i = 0; i < numberOfRows.value; i++) {
         diagonalList.add([j, i]);
       }
-      if(checkSubset(pData, diagonalList)){
+      if (checkSubset(pData, diagonalList)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  bool checkForCol(List<List<int>> pData) {
+    for (int j = 0; j < numberOfRows.value; j++) {
+      List<List<int>> diagonalList = [];
+      diagonalList.add(defList);
+
+      for (int i = 0; i < numberOfRows.value; i++) {
+        diagonalList.add([i, j]);
+      }
+      if (checkSubset(pData, diagonalList)) {
         return true;
       }
     }
