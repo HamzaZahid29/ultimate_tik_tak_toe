@@ -26,7 +26,7 @@ class GameManager extends GetxController {
     [-1, -1]
   ].obs;
 
-  void resetGame(){
+  void resetGame() {
     p1data.value = [
       [-1, -1]
     ];
@@ -70,6 +70,7 @@ class GameManager extends GetxController {
     print('game over checked');
     List<List<int>> diagonalList = [];
     List<List<int>> diagonalListAlt = [];
+
     diagonalList.add(defList);
     diagonalListAlt.add(defList);
 
@@ -77,12 +78,44 @@ class GameManager extends GetxController {
       diagonalList.add([i, i]);
       diagonalListAlt.add([i, numberOfRows.value - i - 1]);
     }
+
     return (checkSubset(diagonalList, _p1data) ||
         checkSubset(diagonalList, _p2data) ||
         checkSubset(diagonalListAlt, _p1data) ||
-        checkSubset(diagonalListAlt, _p2data));
+        checkSubset(diagonalListAlt, _p2data) ||
+        checkForRow(_p1data) ||
+        checkForRow(_p2data)||checkForCol(_p1data) ||
+        checkForCol(_p2data));
   }
 
+  bool checkForRow(List<List<int>> pData) {
+    for (int j = 0; j < numberOfRows.value; j++) {
+      List<List<int>> diagonalList = [];
+      diagonalList.add(defList);
+
+      for (int i = 0; i < numberOfRows.value; i++) {
+        diagonalList.add([j, i]);
+      }
+      if (checkSubset(pData, diagonalList)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  bool checkForCol(List<List<int>> pData) {
+    for (int j = 0; j < numberOfRows.value; j++) {
+      List<List<int>> diagonalList = [];
+      diagonalList.add(defList);
+
+      for (int i = 0; i < numberOfRows.value; i++) {
+        diagonalList.add([i, j]);
+      }
+      if (checkSubset(pData, diagonalList)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   bool checkSubset(List<List<int>> playerList, List<List<int>> possibleList) {
     DeepCollectionEquality equality = DeepCollectionEquality();
@@ -91,8 +124,8 @@ class GameManager extends GetxController {
     List<List<int>> sortedPossibleList = List.from(possibleList)
       ..sort((a, b) => compareLists(a, b));
     return equality.equals(sortedPlayerList, sortedPossibleList);
-
   }
+
   int compareLists(List<int> a, List<int> b) {
     for (int i = 0; i < a.length && i < b.length; i++) {
       if (a[i] != b[i]) {
